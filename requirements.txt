@@ -5,3 +5,4 @@ scipy
 numpy
 matplotlib
 pyc3dserver
+openpyxl

@@ -2,64 +2,39 @@ import pyc3dtools
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
-
+import openpyxl
 # Path to the C3D file
 file_path = '/Users/amoor/Downloads/WalkNormal01.c3d'
 TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2M2VlNDFlY2RmODE2MDk0MTI0ZTEyNjIiLCJpYXQiOjE2ODc0MDk1ODEsImV4cCI6MTY4NzQxMzE4MX0.KwuGt4MNbuR2QcwMy4clRB8waVy0anBcdmDDyCF3y3c"
 
+def detect_midstances(start_frame, end_frame, z_data, y_data):
+    left_foot_first = False
+    right_foot_first = False
+    mid_stance_frames = []
+    LKNE_y = y_data["LKNE"]
+    RKNE_y = y_data["RKNE"]
+    RKNE_z = z_data["RKNE"]
+    LKNE_z = z_data["LKNE"]
+    LANK_Z = z_data["LANK"]
+    RANK_Z = z_data["RANK"]
+    # Detect whether we have contact with the right foot first or the left foot first
+    LTOE_z = z_data["LTOE"]
+    RTOE_z = z_data["RTOE"]
 
-def detect_walk_phases(c3d):
-    points = np.array(c3d['Markers'])
-    num_frames = points.shape[0]
-    marker_labels = c3d['Markers Label']
-
-    # Assuming 'heel' and 'toe' markers are labeled appropriately
-    heel_marker_idx = marker_labels.index('heel') if 'heel' in marker_labels else None
-    toe_marker_idx = marker_labels.index('toe') if 'toe' in marker_labels else None
-
-    if heel_marker_idx is None or toe_marker_idx is None:
-        raise ValueError("Heel or Toe marker not found in the data.")
-
-    heel_z = points[:, heel_marker_idx, 2]
-    toe_z = points[:, toe_marker_idx, 2]
-
-    grf = None
-    if 'ForcePlate' in c3d and len(c3d['ForcePlate']) > 0:
-        grf = np.array(c3d['ForcePlate'][0]['FZ'][:, 0])
-
-    # Detect Initial Contact (IC)
-    ic_frames = np.where((heel_z[1:] < heel_z[:-1]) & (heel_z[:-1] >= heel_z[1:]))[0] + 1
-
-    # Detect Toe Off (TO)
-    to_frames = np.where((toe_z[1:] < toe_z[:-1]) & (toe_z[:-1] >= toe_z[1:]))[0] + 1
-
-    # Detect Heel Lift (HL) and Flat Foot (FF) based on heel_z
-    hl_frames = np.where((heel_z[1:] > heel_z[:-1]) & (heel_z[:-1] <= heel_z[1:]))[0] + 1
-    ff_frames = np.where((heel_z == heel_z.min()))[0]
-
-    # Mid Stance (MS)
-    if grf is not None:
-        ms_frames = np.where(grf == grf.max())[0]
+    if LTOE_z[start_frame - 1] > RTOE_z[start_frame - 1]:
+        left_foot_first = True
     else:
-        ms_frames = np.where((heel_z + toe_z) / 2 == (heel_z + toe_z).max())[0]
-
-    # Create a dictionary of phases
-    phases = {
-        'IC': ic_frames,
-        'FF': ff_frames,
-        'MS': ms_frames,
-        'HL': hl_frames,
-        'TO': to_frames
-    }
-
-    return phases
+        right_foot_first = True
+    print(f"Left foot first: {left_foot_first}")
+    print(f"Right foot first: {right_foot_first}")
+    return []
 
 
-def split_data_by_phases(data, phases):
-    phase_data = {}
-    for phase, frames in phases.items():
-        phase_data[phase] = data.iloc[frames]
-    return phase_data
+
+
+
+
+
 
 
 def read_c3dtools(file_path):
@@ -74,42 +49,6 @@ def read_c3dtools(file_path):
     except Exception as e:
         print(e)
         return None
-
-
-def find_initial_contact(c3d, marker_index):
-    points = np.array(c3d['Markers'])
-    num_frames = points.shape[0]
-    z_positions = points[:, marker_index, 2]  # Vertical positions of the specified marker
-
-    initial_contacts = []
-    threshold = np.mean(z_positions) - 0.1 * np.std(z_positions)  # Adjust the threshold as necessary
-
-    for i in range(1, num_frames):
-        if z_positions[i] < threshold and z_positions[i - 1] >= threshold:
-            initial_contacts.append(i)
-
-    return initial_contacts
-
-
-def plot_initial_contact(c3d, initial_contacts, marker_index):
-    points = np.array(c3d['Markers'])
-    x_coords = points[:, marker_index, 0]
-    y_coords = points[:, marker_index, 1]
-    z_coords = points[:, marker_index, 2]
-
-    fig = plt.figure()
-    ax = fig.add_subplot(111, projection='3d')
-    ax.plot(x_coords, y_coords, z_coords, label='Trajectory')
-
-    # Highlight initial contacts
-    ax.scatter(x_coords[initial_contacts], y_coords[initial_contacts], z_coords[initial_contacts], c='r',
-               label='Initial Contact')
-
-    ax.set_xlabel('X')
-    ax.set_ylabel('Y')
-    ax.set_zlabel('Z')
-    plt.legend()
-    plt.show()
 
 
 def check_start_frame(main_grf_data, start_frame):
@@ -190,7 +129,7 @@ if __name__ == "__main__":
             time = i
             point_data = []
             for j in range(Number_of_actual_Marker):
-                if (Y_SCREEN == '-Z' or Y_SCREEN == '+Z'):
+                if Y_SCREEN == '-Z' or Y_SCREEN == '+Z':
                     point_data.append(points[i, j, 0])
                     point_data.append(points[i, j, 2])
                     point_data.append(points[i, j, 1] * -1)
@@ -208,13 +147,11 @@ if __name__ == "__main__":
     # Detect which frames have a GRF in either forceplate
     start_frame = 0
     end_frame = NumFrames
-    start_frame_flag = False
-
     for i in range(NumFrames):
         for fp in range(len(Forceplates)):
             main_cop_data.append([cop_data[fp][i, 0, 0], cop_data[fp][i, 1, 0]])
             main_grf_data.append([grf_vector[fp][i, 0, 0], grf_vector[fp][i, 1, 0], grf_vector[fp][i, 2, 0]])
-            print(f"Frame {i} - Forceplate {fp} - COP: {main_cop_data[-1]} - GRF: {main_grf_data[-1]}")
+            # print(f"Frame {i} - Forceplate {fp} - COP: {main_cop_data[-1]} - GRF: {main_grf_data[-1]}")
     print(len(main_grf_data))
     start_frame = check_start_frame(main_grf_data, start_frame)
     end_frame = check_end_frame(main_grf_data, end_frame, start_frame)
@@ -284,3 +221,12 @@ if __name__ == "__main__":
                 pyg_analog_data = pd.DataFrame(s1)
             else:
                 pyg_analog_data.insert(1, f, AA_data)
+    data.columns = data.columns.str.strip()
+    z_data = data[data["XYZ"] == "z"].reset_index(drop=True)
+    y_data = data[data["XYZ"] == "y"].reset_index(drop=True)
+    # Compute midstance frames
+    mid_stance_frames = detect_midstances(start_frame, end_frame, z_data, y_data)
+    print(mid_stance_frames)
+
+
+
