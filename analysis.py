@@ -52,17 +52,10 @@ def findMidStance(markersWithLabels, Fs_MarkerPositions, times, contexts, events
         np.square(RKNE[event_ic_left:event_footoff_left, 2] - LKNE[event_ic_left:event_footoff_left, 2])))
     midStance_left = np.argmin(d1_d2_left) + event_ic_left
 
-
-    # # COMPUTE DISTANCES FOR ALL FRAMES AND PLOT WHERE EXACTLY IS THE COMPUTED MID-STANCE SUPPOSED TO BE HAPPENING (for validation purposes)
-    # RKNE_LANK_ALL = np.abs(np.sqrt(np.square(RANK[:, 2] - LANK[:, 2])) - np.sqrt(np.square(RKNE[:, 2] - LKNE[:, 2])))
-    # plt.plot(np.arange(len(RKNE_LANK_ALL)), RKNE_LANK_ALL)
-    # plt.axvline(midStance, color='r')
-    # plt.show()
-
     return midStance_right, midStance_left
 
 # The terminal stance is computed as an estimation of 10 frames before the opposite foot strikes the ground.
-def findTerminalStance(markersWithLabels, Fs_MarkerPositions, times, contexts, events):
+def findTerminalStance(Fs_MarkerPositions, times, contexts, events):
     evnt_footstrike_right = []
     evnt_footstrike_left = []
     evnt_terminalStance_right = []
@@ -132,7 +125,7 @@ def extractC3D(file_path):
     globalEvents = pd.DataFrame(d).sort_values('times').reset_index(drop=True)
     midStance_r, midStance_l = findMidStance(data, frameRate, globalEvents['times'], globalEvents['foot'],
                                              globalEvents['labels'])
-    terminalStance_r, terminalStance_l = findTerminalStance(data, frameRate, globalEvents['times'], globalEvents['foot'], globalEvents['labels'])
+    terminalStance_r, terminalStance_l = findTerminalStance(frameRate, globalEvents['times'], globalEvents['foot'], globalEvents['labels'])
     terminalStance = pd.DataFrame({
         'foot': ['Right'] * len(terminalStance_r) + ['Left'] * len(terminalStance_l),
         'labels': ['Terminal Stance'] * (len(terminalStance_r) + len(terminalStance_l)),
@@ -155,26 +148,44 @@ def extractC3D(file_path):
 
 def trimGlobals(globalEvents):
     midStanceCounter = 0
+    footStrikeCounter = 0
+    loadingResponseCounter = 0
+    footOffCounter = 0
+    terminalStanceCounter = 0
+    firstIndex = 0
+    lastIndex = -1
 
     for i, row in globalEvents.iterrows():
-        if row['labels'] == "Mid Stance":
+
+        if row['labels'] == "Foot Strike":
+            footStrikeCounter += 1
+        elif row['labels'] == "Mid Stance":
             midStanceCounter += 1
-            if midStanceCounter == 2:
-                break
+        elif row['labels'] == "Foot Off":
+            footOffCounter += 1
+        elif row['labels'] == "Loading Response":
+            loadingResponseCounter += 1
+        elif row['labels'] == "Terminal Stance":
+            terminalStanceCounter += 1
+        if footStrikeCounter >= 2 and midStanceCounter >= 2 and footOffCounter >= 2 and loadingResponseCounter >= 2 and terminalStanceCounter >= 2:
+            lastIndex = i
+            break
+
+
 
     # Slice the DataFrame up to the current index
-    filtered_globalEvents = globalEvents.iloc[:i + 5]
+    filtered_globalEvents = globalEvents.iloc[firstIndex: lastIndex + 1]
     return filtered_globalEvents
 
 if __name__ == "__main__":
     file_path_normal = '/Users/amoor/Downloads/Walk_100_03.c3d'
     file_path = '/Users/amoor/Downloads/WalkNormal01.c3d'
-    # global_events_normal = extractC3D(file_path_normal)
+    global_events_normal = extractC3D(file_path_normal)
     global_events = extractC3D(file_path)
     global_events = trimGlobals(global_events)
-    # global_events_normal=trimGlobals(global_events_normal)
+    global_events_normal=trimGlobals(global_events_normal)
 
-    # print(global_events_normal)
+    print(global_events_normal)
     print("-----------------------------------")
     print(global_events)
 
