@@ -1,8 +1,0 @@
-pyc3dtools
-ipywidgets
-pygwalker
-scipy
-numpy
-matplotlib
-pyc3dserver
-openpyxl
