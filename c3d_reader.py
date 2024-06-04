@@ -39,6 +39,17 @@ def readC3D(file_path):
     contexts_labels = c3d_file['parameters']['EVENT']['LABELS']['value']
     contexts_frames = c3d_file['parameters']['EVENT']['TIMES']['value'][1, :]
     frameRate = c3d_file['header']['points']['frame_rate']
+    df = pd.DataFrame(data)
+    LKneeAngle = df['LKneeAngles']
+    RKneeAngle = df['RKneeAngles']
+    LHipAngle = df['LHipAngles']
+    RHipAngle = df['RHipAngles']
+    LAnkleAngle = df['LAnkleAngles']
+    RAnkleAngle = df['RAnkleAngles']
+    LAngles = [LKneeAngle, LHipAngle, LAnkleAngle]
+    RAngles = [RKneeAngle, RHipAngle, RAnkleAngle]
+
+
 
     for i in range(0, numberOfIndicators):
         for j in range(0, numberOfFramesPerIndicator):
@@ -75,7 +86,7 @@ def readC3D(file_path):
     globalEvents = pd.concat([globalEvents, loadingResponse], ignore_index=True)
     globalEvents = globalEvents.sort_values('times').reset_index(drop=True)
 
-    return globalEvents
+    return globalEvents, LAngles, RAngles
 
 # This function trims the global events DataFrame to only contain the events that are necessary for the analysis.
 # We select the first 2 gait cycles, one for each leg, and we only keep the events that are necessary for the analysis.
