@@ -29,7 +29,7 @@ def compareJointAngles(global_events, global_events_normal, LAngles, RAngles, LA
     knee_index = 1
     ankle_index = 2
 
-    data_labels = ["LHip", "LKnee", "LAnkle", "RHip", "RKnee", "RAnkle", "Foot_Event"]
+    data_labels = ["LHip", "LKnee", "LAnkle", "RHip", "RKnee", "RAnkle", "Foot", "Event"]
     data = []
 
     # Extract  joint angles for the left leg
@@ -63,7 +63,7 @@ def compareJointAngles(global_events, global_events_normal, LAngles, RAngles, LA
         result_r = calculateDifferences(RAnkleAngles, RKneeAngles, RHipAngles, RAnkleAnglesNormal, RKneeAnglesNormal, RHipAnglesNormal, index_frame_normal, index_frame)
 
 
-        data.append([result_l[0], result_l[1], result_l[2], result_r[0], result_r[1], result_r[2], global_event['foot'] + " " + global_event['labels']])
+        data.append([result_l[0], result_l[1], result_l[2], result_r[0], result_r[1], result_r[2], global_event['foot'], global_event['labels']])
     df = pd.DataFrame(data, columns=data_labels)
     return df
 
