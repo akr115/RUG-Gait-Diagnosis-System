@@ -1,0 +1,53 @@
+.App {
+  text-align: center;
+  justify-content: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+}
+
+.App-header {
+  width: 100%;
+  padding: 20px;
+  color: red;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: lightgoldenrodyellow;
+}
+
+.umcg-logo {
+  width: 150px;
+  height: auto;
+  margin-left: 1rem;
+  margin-right: 1rem;
+}
+
+button {
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.data-box {
+  margin-top: 1rem;
+  text-align: center;
+  display: flex;
+  padding: 1rem;
+  align-items: center;
+  justify-content: center;
+  border: solid black;
+  border-radius: 0.5rem;
+  width: 20rem;
+  
+}
+
+button:hover {
+  background-color: lightgreen;
+  color: white;
+}
+
+button:active {
+  background-color: darkgreen;
+}
