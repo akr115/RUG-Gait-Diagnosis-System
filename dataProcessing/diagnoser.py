@@ -99,10 +99,23 @@ def diagnose_hip(data, side):
     df_swing = data[data['Foot'] != side]
     # Diagnosis for the stance phase
     for index, row in df_stance.iterrows():
-        if row.Event == 'Foot Strike':
+        if row.Event == 'Foot Strike' or row.Event == 'Loading Response' or row.Event == 'Mid Stance':
             # Access the associated joint angle with the side
             hip = row['LHip'] if side == 'Left' else row['RHip']
             if hip == 1:
+                print(f"Toegenomen heupflexie bij {row.Foot} {row.Event}")  # Increased hip flexion
+            elif hip == -1:
+                print(f"Afgenomen heupflexie bij {row.Foot} {row.Event}")  # Decreased hip flexion
+            else:
+                print(f"Geen relevante bevindingen bij {row.Foot} {row.Event}")
+        if row.Event == 'Terminal Stance':
+            hip = row['LHip'] if side == 'Left' else row['RHip']
+            if hip == 1:
+                print(f"Geen Heupextensie bij {row.Foot} {row.Event}")
+            else:
+                print(f"Geen relevante bevindingen bij {row.Foot} {row.Event}")
+
+
 
 
 
