@@ -19,10 +19,11 @@ function Home() {
     }
     const formData = new FormData();
     formData.append("file", selectedFile);
-  
+
     fetch("http://localhost:5000/upload", {
       method: "POST",
       body: formData,
+      credentials: 'include'  // Ensure cookies are included if needed
     })
       .then(response => {
         if (!response.ok) {
@@ -41,8 +42,6 @@ function Home() {
         // Handle errors here if needed
       });
   };
-  
-  
 
   return (
     <div className="App">
