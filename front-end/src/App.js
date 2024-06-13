@@ -19,19 +19,30 @@ function Home() {
     }
     const formData = new FormData();
     formData.append("file", selectedFile);
-
-    fetch("/upload", {
+  
+    fetch("http://localhost:5000/upload", {
       method: "POST",
       body: formData,
     })
-      .then(response => response.json())
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
       .then(data => {
         console.log("File uploaded successfully:", data);
+        alert("File uploaded successfully!");
+        // Optionally, you can update UI or perform additional actions here
       })
       .catch(error => {
         console.error("Error uploading file:", error);
+        alert("Error uploading file. Please try again.");
+        // Handle errors here if needed
       });
   };
+  
+  
 
   return (
     <div className="App">
