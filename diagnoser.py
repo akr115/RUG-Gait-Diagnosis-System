@@ -1,4 +1,3 @@
-
 def diagnose_ankle(data, side):
     df_stance =  data[data['Foot'] == side]
     df_swing = data[data['Foot'] != side]
@@ -56,6 +55,56 @@ def diagnose_ankle(data, side):
                 print(f"Plantarflexie andere voet bij {row.Foot} {row.Event}")  # Plantarflexion other foot
             else:
                 print(f"Geen relevante bevindingen bij {row.Foot} {row.Event}")
+
+def diagnose_knee(data, side):
+    df_stance =  data[data['Foot'] == side]
+    df_swing = data[data['Foot'] != side]
+    # Diagnosis for the stance phase
+    for index, row in df_stance.iterrows():
+        if row.Event == 'Foot Strike':
+            # Access the associated joint angle with the side
+            knee = row['LKnee'] if side == 'Left' else row['RKnee']
+            if knee == 1:
+                #TODO: Add the degree of flexion
+                print(f"Toegenomen knieflexie bij {row.Foot} {row.Event}")  # Increased knee flexion
+            else:
+                print(f"Geen relevante bevindingen bij {row.Foot} {row.Event}")
+        elif row.Event == 'Loading Response':
+            print("Under Construction")
+        elif row.Event == 'Mid Stance':
+            print("Under Construction")
+        elif row.Event == 'Terminal Stance':
+            knee = row['LKnee'] if side == 'Left' else row['RKnee']
+            if knee == 1:
+                # TODO: Add the degree of flexion
+                print(f"Toegenomen knieflexie bij {row.Foot} {row.Event}")  # Increased knee flexion
+            elif knee == -1:
+                # TODO: Add the degree of flexion
+                print(f"Kniehyperextensie bij {row.Foot} {row.Event}")
+            else:
+                print(f"Geen relevante bevindingen bij {row.Foot} {row.Event}")
+
+    for index, row  in df_swing.iterrows():
+        if row.Event == 'Foot Strike':
+            knee = row['LKnee'] if side == 'Left' else row['RKnee']
+            if knee == -1:
+                # Decreased knee flexion other foot
+                # TODO: Add the degree of flexion
+                print("Afgenomen knieflexie bij andere voet bij {row.Foot} {row.Event}")
+            else:
+                print(f"Geen relevante bevindingen bij andere voet {row.Foot} {row.Event}")
+
+def diagnose_hip(data, side):
+    df_stance =  data[data['Foot'] == side]
+    df_swing = data[data['Foot'] != side]
+    # Diagnosis for the stance phase
+    for index, row in df_stance.iterrows():
+        if row.Event == 'Foot Strike':
+            # Access the associated joint angle with the side
+            hip = row['LHip'] if side == 'Left' else row['RHip']
+            if hip == 1:
+
+
 
 
 
