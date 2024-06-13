@@ -1,6 +1,6 @@
-from c3d_reader import readC3D, trimGlobals, readXLSX
-from comparer import compareJointAngles
-from diagnoser import diagnose
+from dataProcessing.c3d_reader import readC3D, trimGlobals, readXLSX
+from dataProcessing.comparer import compareJointAngles
+from dataProcessing.diagnoser import diagnose
 
 if __name__ == "__main__":
     file_path_normal = '/Users/amoor/Downloads/Walk_100_03.c3d'
