@@ -7,10 +7,10 @@ import os
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Set a secret key for session management
-csrf = CSRFProtect(app)
+# csrf = CSRFProtect(app)
 
 # CORS configuration
-cors = CORS(app, resources={r"/*": {"origins": "http://127.0.0.1:3000"}}, supports_credentials=True)
+cors = CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
 
 UPLOAD_FOLDER = 'uploads'
 if not os.path.exists(UPLOAD_FOLDER):
@@ -65,6 +65,7 @@ def get_data():
 
 @app.route('/upload', methods=['POST'])
 def upload_files():
+    print("here")
     if 'files' not in request.files:
         return jsonify({"error": "No file part"}), 400
 
