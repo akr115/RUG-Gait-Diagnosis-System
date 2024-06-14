@@ -6,19 +6,21 @@ import rug_logo from './rug-logo.png';
 import Auth from './Auth';
 
 function Home() {
-  const [selectedFile, setSelectedFile] = useState(null);
+  const [selectedFiles, setSelectedFiles] = useState([]);
 
   const handleFileChange = (event) => {
-    setSelectedFile(event.target.files[0]);
+    setSelectedFiles(event.target.files);
   };
 
   const handleUpload = () => {
-    if (!selectedFile) {
-      alert("Please select a file first!");
+    if (selectedFiles.length === 0) {
+      alert("Please select files first!");
       return;
     }
     const formData = new FormData();
-    formData.append("file", selectedFile);
+    for (let i = 0; i < selectedFiles.length; i++) {
+      formData.append("files", selectedFiles[i]);
+    }
 
     fetch("http://localhost:5000/upload", {
       method: "POST",
@@ -32,14 +34,12 @@ function Home() {
         return response.json();
       })
       .then(data => {
-        console.log("File uploaded successfully:", data);
-        alert("File uploaded successfully!");
-        // Optionally, you can update UI or perform additional actions here
+        console.log("Files uploaded successfully:", data);
+        alert("Files uploaded successfully!");
       })
       .catch(error => {
-        console.error("Error uploading file:", error);
-        alert("Error uploading file. Please try again.");
-        // Handle errors here if needed
+        console.error("Error uploading files:", error);
+        alert("Error uploading files. Please try again.");
       });
   };
 
@@ -51,7 +51,7 @@ function Home() {
         <img src={rug_logo} className='umcg-logo' alt="RUG Logo" />
       </header>
       <div className="data-box">
-        <input type="file" accept=".c3d,.xlsx" onChange={handleFileChange} />
+        <input type="file" accept=".c3d,.xlsx" multiple onChange={handleFileChange} />
         <button onClick={handleUpload}>Upload Data</button>
       </div>
     </div>
