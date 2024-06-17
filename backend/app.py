@@ -17,23 +17,22 @@ if not os.path.exists(UPLOAD_FOLDER_C3D):
 if not os.path.exists(UPLOAD_FOLDER_XLSX):
     os.makedirs(UPLOAD_FOLDER_XLSX)
 
+users = {"admin": "password123"}  # In-memory user store
+
 @app.route('/')
 def index():
     return render_template('index.html')
 
-@app.route('/login', methods=['GET', 'POST'])
+@app.route('/login', methods=['POST'])
 def login():
-    form = LoginForm()
-    if form.validate_on_submit():
-        username = form.username.data
-        password = form.password.data
-        if username in users and users[username] == password:
-            session['username'] = username
-            flash('Login successful', 'success')
-            return redirect(url_for('protected'))
-        else:
-            flash('Invalid username or password', 'danger')
-    return render_template('login.html', form=form)
+    data = request.get_json()
+    username = data.get('username')
+    password = data.get('password')
+    if username in users and users[username] == password:
+        session['username'] = username
+        return jsonify({"success": True, "message": "Login successful"}), 200
+    else:
+        return jsonify({"success": False, "message": "Invalid username or password"}), 401
 
 @app.route('/protected')
 def protected():
@@ -41,7 +40,7 @@ def protected():
         return render_template('protected.html')
     else:
         flash('You need to login first', 'danger')
-        return redirect(url_for('login'))
+        return redirect(url_for('index'))
 
 @app.route('/logout')
 def logout():
