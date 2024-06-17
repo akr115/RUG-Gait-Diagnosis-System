@@ -1,13 +1,18 @@
 import React, { useState } from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, Navigate, useNavigate } from 'react-router-dom';
+import { useAuth } from './AuthContext';
 import './App.css';
 import umcg_logo from './umcg-logo.png';
 import rug_logo from './rug-logo.png';
 import Auth from './Auth';
+import ProtectedRoute from './ProtectedRoute';
 
 function Home() {
   const [c3dFiles, setC3dFiles] = useState([]);
   const [xlsxFiles, setXlsxFiles] = useState([]);
+  const { logout } = useAuth();
+  const navigate = useNavigate();
+
 
   const handleC3dFileChange = (event) => {
     setC3dFiles(event.target.files);
@@ -50,12 +55,19 @@ function Home() {
       });
   };
 
+  const handleLogout = () => {
+    logout();
+    navigate('/auth');
+  };
+  
+
   return (
     <div className="App">
       <header className="App-header">
         <img src={umcg_logo} className='umcg-logo' alt="UMCG Logo" />
         <h1>Gait Diagnosis System UMCG</h1>
         <img src={rug_logo} className='umcg-logo' alt="RUG Logo" />
+        <button onClick={handleLogout}>Logout</button>
       </header>
       <div className="data-box">
         <div>
@@ -75,7 +87,9 @@ function App() {
   return (
     <Routes>
       <Route path="/auth" element={<Auth />} />
-      <Route path="/" element={<Home />} />
+      {/* <Route path="/upload" element={<Home />} /> */}
+      <Route path="/upload" element={<ProtectedRoute element={<Home />} />} />
+      <Route path="" element={<Navigate to="/auth" />} />
     </Routes>
   );
 }
