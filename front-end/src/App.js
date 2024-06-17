@@ -6,13 +6,19 @@ import rug_logo from './rug-logo.png';
 import Auth from './Auth';
 
 function Home() {
-  const [selectedFiles, setSelectedFiles] = useState([]);
+  const [c3dFiles, setC3dFiles] = useState([]);
+  const [xlsxFiles, setXlsxFiles] = useState([]);
 
-  const handleFileChange = (event) => {
-    setSelectedFiles(event.target.files);
+  const handleC3dFileChange = (event) => {
+    setC3dFiles(event.target.files);
   };
 
-  const handleUpload = () => {
+  const handleXlsxFileChange = (event) => {
+    setXlsxFiles(event.target.files);
+  };
+
+  const handleUpload = (fileType) => {
+    const selectedFiles = fileType === 'c3d' ? c3dFiles : xlsxFiles;
     if (selectedFiles.length === 0) {
       alert("Please select files first!");
       return;
@@ -22,10 +28,11 @@ function Home() {
       formData.append("files", selectedFiles[i]);
     }
 
-    fetch("http://localhost:5000/upload", {
+    const endpoint = fileType === 'c3d' ? "/upload/c3d" : "/upload/xlsx";
+    fetch(`http://localhost:5000${endpoint}`, {
       method: "POST",
       body: formData,
-      credentials: 'include'  // Ensure cookies are included if needed
+      credentials: 'include'
     })
       .then(response => {
         if (!response.ok) {
@@ -51,8 +58,14 @@ function Home() {
         <img src={rug_logo} className='umcg-logo' alt="RUG Logo" />
       </header>
       <div className="data-box">
-        <input type="file" accept=".c3d,.xlsx" multiple onChange={handleFileChange} />
-        <button onClick={handleUpload}>Upload Data</button>
+        <div>
+          <input type="file" accept=".c3d" multiple onChange={handleC3dFileChange} />
+          <button onClick={() => handleUpload('c3d')}>Upload C3D Files</button>
+        </div>
+        <div>
+          <input type="file" accept=".xlsx" multiple onChange={handleXlsxFileChange} />
+          <button onClick={() => handleUpload('xlsx')}>Upload XLSX Files</button>
+        </div>
       </div>
     </div>
   );

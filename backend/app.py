@@ -7,18 +7,15 @@ import os
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Set a secret key for session management
-# csrf = CSRFProtect(app)
 
-# CORS configuration
 cors = CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
 
-UPLOAD_FOLDER = 'uploads'
-if not os.path.exists(UPLOAD_FOLDER):
-    os.makedirs(UPLOAD_FOLDER)
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-
-# In-memory user store (for demonstration purposes)
-users = {"admin": "password123"}
+UPLOAD_FOLDER_C3D = 'uploads/c3d'
+UPLOAD_FOLDER_XLSX = 'uploads/xlsx'
+if not os.path.exists(UPLOAD_FOLDER_C3D):
+    os.makedirs(UPLOAD_FOLDER_C3D)
+if not os.path.exists(UPLOAD_FOLDER_XLSX):
+    os.makedirs(UPLOAD_FOLDER_XLSX)
 
 @app.route('/')
 def index():
@@ -63,9 +60,8 @@ def get_data():
     else:
         return jsonify({"error": "Unauthorized"}), 401
 
-@app.route('/upload', methods=['POST'])
-def upload_files():
-    print("here")
+@app.route('/upload/c3d', methods=['POST'])
+def upload_c3d_files():
     if 'files' not in request.files:
         return jsonify({"error": "No file part"}), 400
 
@@ -76,13 +72,33 @@ def upload_files():
     try:
         filenames = []
         for file in files:
-            if file and (file.filename.endswith('.c3d') or file.filename.endswith('.xlsx')):
+            if file and file.filename.endswith('.c3d'):
                 filename = secure_filename(file.filename)
-                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                file.save(os.path.join(UPLOAD_FOLDER_C3D, filename))
                 filenames.append(filename)
-        return jsonify({"message": "Files uploaded successfully!", "filenames": filenames}), 200
+        return jsonify({"message": "C3D files uploaded successfully!", "filenames": filenames}), 200
     except Exception as e:
-        return jsonify({"error": str(e)}), 500  # Handle other exceptions with 500 status code
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/upload/xlsx', methods=['POST'])
+def upload_xlsx_files():
+    if 'files' not in request.files:
+        return jsonify({"error": "No file part"}), 400
+
+    files = request.files.getlist('files')
+    if not files:
+        return jsonify({"error": "No selected files"}), 400
+
+    try:
+        filenames = []
+        for file in files:
+            if file and file.filename.endswith('.xlsx'):
+                filename = secure_filename(file.filename)
+                file.save(os.path.join(UPLOAD_FOLDER_XLSX, filename))
+                filenames.append(filename)
+        return jsonify({"message": "XLSX files uploaded successfully!", "filenames": filenames}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)
