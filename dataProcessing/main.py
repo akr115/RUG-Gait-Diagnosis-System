@@ -1,15 +1,17 @@
 from .c3d_reader import readC3D, trimGlobals, readXLSX
 from .comparer import compareJointAngles
 from .diagnoser import diagnose
+import os
 
 def process():
-    file_path_normal = 'dataProcessing/Walk_100_03.c3d'
-    file_path = 'dataProcessing/WalkNormal01.c3d'
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    file_path_normal = './Walk_100_03.c3d'
+    file_path = './WalkNormal01.c3d'
     lo_file_path = './LO.xlsx'
-    lo = readXLSX(lo_file_path)
+    lo = readXLSX(os.path.join(base_dir, lo_file_path))
     global_events_normal, LAnglesNormal, RAnglesNormal, first_frame_normal, last_frame_normal, frame_rate_normal = (
-        readC3D(file_path_normal))
-    global_events, LAngles, RAngles, first_frame, last_frame, frame_rate = readC3D(file_path)
+        readC3D(os.path.join(base_dir, file_path_normal)))
+    global_events, LAngles, RAngles, first_frame, last_frame, frame_rate = readC3D(os.path.join(base_dir,file_path))
     global_events = trimGlobals(global_events)
 
 
