@@ -7,6 +7,7 @@ from werkzeug.utils import secure_filename
 from flask_cors import CORS
 import os
 import pandas as pd
+from dataProcessing.diagnoser import diagnose
 
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
@@ -100,24 +101,41 @@ def upload_xlsx_files():
     
 @app.route('/diagnose', methods=['POST'])
 def diagnose_endpoint():
-    if 'file' not in request.files:
-        return jsonify({"error": "No file part"}), 400
+    try:
+        file_path = request.json.get('file_path')
+        if not file_path:
+            return jsonify({"error": "No file path provided"}), 400
 
-    file = request.files['file']
-    if file.filename == '':
-        return jsonify({"error": "No selected file"}), 400
+        file_path = os.path.join(app.config['UPLOAD_FOLDER_XLSX'], file_path)
+        if not os.path.exists(file_path):
+            return jsonify({"error": "File not found"}), 400
 
-    if file and file.filename.endswith('.xlsx'):
-        filename = secure_filename(file.filename)
-        filepath = os.path.join(UPLOAD_FOLDER_XLSX, filename)
-        file.save(filepath)
+        data = pd.read_excel(file_path)
+        results = diagnose(data)
+        return jsonify({"results": results}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    
+# @app.route('/diagnose', methods=['POST'])
+# def diagnose_endpoint():
+#     if 'file' not in request.files:
+#         return jsonify({"error": "No file part"}), 400
 
-        data = pd.read_excel(filepath)
-        results = process()
+#     file = request.files['file']
+#     if file.filename == '':
+#         return jsonify({"error": "No selected file"}), 400
 
-        return jsonify(results), 200
-    else:
-        return jsonify({"error": "Invalid file type"}), 400
+#     if file and file.filename.endswith('.xlsx'):
+#         filename = secure_filename(file.filename)
+#         filepath = os.path.join(UPLOAD_FOLDER_XLSX, filename)
+#         file.save(filepath)
+
+#         data = pd.read_excel(filepath)
+#         results = process()
+
+#         return jsonify(results), 200
+#     else:
+#         return jsonify({"error": "Invalid file type"}), 400
 
 if __name__ == '__main__':
     app.run(debug=True)
