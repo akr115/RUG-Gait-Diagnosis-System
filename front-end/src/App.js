@@ -34,7 +34,7 @@ function Home() {
     }
 
     const endpoint = fileType === 'c3d' ? "/upload/c3d" : "/upload/xlsx";
-    fetch(`http://localhost:5000${endpoint}`, {
+    fetch(`http://127.0.0.1:5000${endpoint}`, {
       method: "POST",
       body: formData,
       credentials: 'include'
@@ -55,7 +55,7 @@ function Home() {
           const diagnosisFormData = new FormData();
           diagnosisFormData.append('file', file);
 
-          fetch('http://localhost:5000/diagnose', {
+          fetch('http://127.0.0.1:5000/diagnose', {
             method: 'POST',
             body: diagnosisFormData,
             credentials: 'include'

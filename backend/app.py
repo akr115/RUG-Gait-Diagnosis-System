@@ -1,5 +1,6 @@
 import sys
 from flask import Flask, jsonify, render_template, redirect, url_for, flash, session, request
+
 from forms import LoginForm
 from flask_wtf.csrf import CSRFProtect
 from werkzeug.utils import secure_filename
@@ -29,7 +30,7 @@ users = {"admin": "password123"}  # In-memory user store
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return 'OK'
 
 @app.route('/login', methods=['POST'])
 def login():
@@ -112,7 +113,7 @@ def diagnose_endpoint():
         file.save(filepath)
 
         data = pd.read_excel(filepath)
-        results = diagnose(data)
+        results = process()
 
         return jsonify(results), 200
     else:

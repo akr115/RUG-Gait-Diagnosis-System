@@ -1,7 +1,7 @@
 import ezc3d
 import pandas as pd
 import numpy as np
-from phase_extractor import findMidStance, findTerminalStance, findLoadingResponse
+from .phase_extractor import findMidStance, findTerminalStance, findLoadingResponse
 
 # This function extracts the data from the xlsx file and returns a DataFrame containing the LO evaluation.
 def readXLSX(file_path):

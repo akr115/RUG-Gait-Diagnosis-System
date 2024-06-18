@@ -1,11 +1,11 @@
-from dataProcessing.c3d_reader import readC3D, trimGlobals, readXLSX
-from dataProcessing.comparer import compareJointAngles
-from dataProcessing.diagnoser import diagnose
+from .c3d_reader import readC3D, trimGlobals, readXLSX
+from .comparer import compareJointAngles
+from .diagnoser import diagnose
 
 def process():
     file_path_normal = 'dataProcessing/Walk_100_03.c3d'
     file_path = 'dataProcessing/WalkNormal01.c3d'
-    lo_file_path = 'dataProcessing/LO.xlsx'
+    lo_file_path = './LO.xlsx'
     lo = readXLSX(lo_file_path)
     global_events_normal, LAnglesNormal, RAnglesNormal, first_frame_normal, last_frame_normal, frame_rate_normal = (
         readC3D(file_path_normal))
