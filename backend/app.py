@@ -1,9 +1,17 @@
+import sys
 from flask import Flask, jsonify, render_template, redirect, url_for, flash, session, request
 from forms import LoginForm
 from flask_wtf.csrf import CSRFProtect
 from werkzeug.utils import secure_filename
 from flask_cors import CORS
 import os
+import pandas as pd
+
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+# Now we can import diagnose from dataProcessing.diagnoser
+from dataProcessing.main import process
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Set a secret key for session management
@@ -48,17 +56,6 @@ def logout():
     flash('You have been logged out', 'info')
     return redirect(url_for('index'))
 
-@app.route('/api/data')
-def get_data():
-    if 'username' in session:
-        data = {
-            "message": "Hello, World!",
-            "items": [1, 2, 3, 4, 5]
-        }
-        return jsonify(data)
-    else:
-        return jsonify({"error": "Unauthorized"}), 401
-
 @app.route('/upload/c3d', methods=['POST'])
 def upload_c3d_files():
     if 'files' not in request.files:
@@ -97,7 +94,29 @@ def upload_xlsx_files():
                 filenames.append(filename)
         return jsonify({"message": "XLSX files uploaded successfully!", "filenames": filenames}), 200
     except Exception as e:
+        print("yo")
         return jsonify({"error": str(e)}), 500
+    
+@app.route('/diagnose', methods=['POST'])
+def diagnose_endpoint():
+    if 'file' not in request.files:
+        return jsonify({"error": "No file part"}), 400
+
+    file = request.files['file']
+    if file.filename == '':
+        return jsonify({"error": "No selected file"}), 400
+
+    if file and file.filename.endswith('.xlsx'):
+        filename = secure_filename(file.filename)
+        filepath = os.path.join(UPLOAD_FOLDER_XLSX, filename)
+        file.save(filepath)
+
+        data = pd.read_excel(filepath)
+        results = diagnose(data)
+
+        return jsonify(results), 200
+    else:
+        return jsonify({"error": "Invalid file type"}), 400
 
 if __name__ == '__main__':
     app.run(debug=True)

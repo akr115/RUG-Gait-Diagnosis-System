@@ -2,10 +2,10 @@ from dataProcessing.c3d_reader import readC3D, trimGlobals, readXLSX
 from dataProcessing.comparer import compareJointAngles
 from dataProcessing.diagnoser import diagnose
 
-if __name__ == "__main__":
-    file_path_normal = '/Users/amoor/Downloads/Walk_100_03.c3d'
-    file_path = '/Users/amoor/Downloads/WalkNormal01.c3d'
-    lo_file_path = '/Users/amoor/Downloads/LO.xlsx'
+def process():
+    file_path_normal = 'dataProcessing/Walk_100_03.c3d'
+    file_path = 'dataProcessing/WalkNormal01.c3d'
+    lo_file_path = 'dataProcessing/LO.xlsx'
     lo = readXLSX(lo_file_path)
     global_events_normal, LAnglesNormal, RAnglesNormal, first_frame_normal, last_frame_normal, frame_rate_normal = (
         readC3D(file_path_normal))
@@ -18,9 +18,9 @@ if __name__ == "__main__":
                        first_frame_normal, last_frame_normal, first_frame, last_frame, frame_rate_normal, frame_rate)
     print(joint_angles_differences)
 
-    diagnose(joint_angles_differences)
+    results = diagnose(joint_angles_differences)
 
-
+    return results
 
     # print(global_events_normal)
     # print("-----------------------------------")

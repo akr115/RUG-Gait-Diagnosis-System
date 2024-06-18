@@ -1,113 +1,117 @@
 def diagnose_ankle(data, side):
-    df_stance =  data[data['Foot'] == side]
+    print(data)
+    df_stance = data[data['Foot'] == side]
     df_swing = data[data['Foot'] != side]
     plantar_flag = 0
+    results = []
 
     # Diagnosis for the stance phase
     for index, row in df_stance.iterrows():
+        result = {"Foot": row.Foot, "Event": row.Event, "Diagnosis": ""}
+        ankle = row['LAnkle'] if side == 'Left' else row['RAnkle']
         if row.Event == 'Foot Strike':
-            # Access the associated joint angle with the side
-            ankle = row['LAnkle'] if side == 'Left' else row['RAnkle']
             if ankle == -1:
-                print(f"Plantarflexie bij {row.Foot} {row.Event}")  # Plantarflexion
+                result["Diagnosis"] = "Plantarflexion"
             elif ankle == 0:
-                print(f"Geen relevante bevindingen bij {row.Foot} {row.Event}") # No relevant finding in this case
+                result["Diagnosis"] = "No relevant finding"
                 plantar_flag = 1
         elif row.Event == 'Loading Response':
-            ankle = row['LAnkle'] if side == 'Left' else row['RAnkle']
             if plantar_flag == 1 and ankle == 0:
-                # No/decreased plantarflexion
-                print(f"Geen/afgenomen plantairflexiebeweging tijdens {row.Foot} {row.Event}")
+                result["Diagnosis"] = "No/decreased plantarflexion"
             else:
-                print(f"Geen relevante bevindingen bij {row.Foot} {row.Event}") # No relevant finding in this case
+                result["Diagnosis"] = "No relevant finding"
         elif row.Event == 'Mid Stance':
-            ankle = row['LAnkle'] if side == 'Left' else row['RAnkle']
             if ankle == -1:
-                # TODO: Add the degree of plantarflexion
-                print(f"Plantarflexie bij {row.Foot} {row.Event}") # Plantarflexion
+                result["Diagnosis"] = "Plantarflexion"
             else:
-                print(f"Toegenomen dorsaalflexie in {row.Foot} {row.Event}") # Increased dorsiflexion
+                result["Diagnosis"] = "Increased dorsiflexion"
         elif row.Event == 'Terminal Stance':
-            ankle = row['LAnkle'] if side == 'Left' else row['RAnkle']
             if ankle == 1:
-                print(f"Toegenomen dorsaalflexie in {row.Foot} {row.Event}") # Increased dorsiflexion
+                result["Diagnosis"] = "Increased dorsiflexion"
             elif ankle == -1:
-                # TODO: Add the degree of flexion
-                print(f"`afgenomen dorsaalflexie in {row.Foot} {row.Event}") # Decreased dorsiflexion
+                result["Diagnosis"] = "Decreased dorsiflexion"
             elif ankle == 0:
-                # Ankle range of motion within normal range
-                # TODO: Add the degree
-                print(f"Enkel range of motion binnen range van normal in {row.Foot} {row.Event}")
+                result["Diagnosis"] = "Ankle range of motion within normal range"
+        results.append(result)
 
-    #Diagnosis for the swing phase
+    # Diagnosis for the swing phase
     for index, row in df_swing.iterrows():
+        result = {"Foot": row.Foot, "Event": row.Event, "Diagnosis": ""}
+        ankle = row['LAnkle'] if side == 'Left' else row['RAnkle']
         if row.Event == 'Mid Stance':
-            ankle = row['LAnkle'] if side == 'Left' else row['RAnkle']
             if ankle == -1:
-                # TODO: Add the degree of plantarflexion
-                print(f"Plantarflexie andere voet bij {row.Foot} {row.Event}") # Plantarflexion other foot
+                result["Diagnosis"] = "Plantarflexion other foot"
             else:
-                print(f"Geen relevante bevindingen bij {row.Foot} {row.Event}")
+                result["Diagnosis"] = "No relevant finding"
         elif row.Event == 'Terminal Stance':
-            ankle = row['LAnkle'] if side == 'Left' else row['RAnkle']
             if ankle == -1:
-                # TODO: Add the degree of plantarflexion
-                print(f"Plantarflexie andere voet bij {row.Foot} {row.Event}")  # Plantarflexion other foot
+                result["Diagnosis"] = "Plantarflexion other foot"
             else:
-                print(f"Geen relevante bevindingen bij {row.Foot} {row.Event}")
+                result["Diagnosis"] = "No relevant finding"
+        results.append(result)
+    return results
 
 def diagnose_knee(data, side):
-    df_stance =  data[data['Foot'] == side]
+    df_stance = data[data['Foot'] == side]
     df_swing = data[data['Foot'] != side]
+    results = []
+
     # Diagnosis for the stance phase
     for index, row in df_stance.iterrows():
+        result = {"Foot": row.Foot, "Event": row.Event, "Diagnosis": ""}
+        knee = row['LKnee'] if side == 'Left' else row['RKnee']
         if row.Event == 'Foot Strike':
-            # Access the associated joint angle with the side
-            knee = row['LKnee'] if side == 'Left' else row['RKnee']
             if knee == 1:
-                #TODO: Add the degree of flexion
-                print(f"Toegenomen knieflexie bij {row.Foot} {row.Event}")  # Increased knee flexion
+                result["Diagnosis"] = "Increased knee flexion"
             else:
-                print(f"Geen relevante bevindingen bij {row.Foot} {row.Event}")
+                result["Diagnosis"] = "No relevant finding"
         elif row.Event == 'Loading Response':
-            print("Under Construction")
+            result["Diagnosis"] = "Under Construction"
         elif row.Event == 'Mid Stance':
-            print("Under Construction")
+            result["Diagnosis"] = "Under Construction"
         elif row.Event == 'Terminal Stance':
-            knee = row['LKnee'] if side == 'Left' else row['RKnee']
             if knee == 1:
-                # TODO: Add the degree of flexion
-                print(f"Toegenomen knieflexie bij {row.Foot} {row.Event}")  # Increased knee flexion
+                result["Diagnosis"] = "Increased knee flexion"
             elif knee == -1:
-                # TODO: Add the degree of flexion
-                print(f"Kniehyperextensie bij {row.Foot} {row.Event}")
+                result["Diagnosis"] = "Knee hyperextension"
             else:
-                print(f"Geen relevante bevindingen bij {row.Foot} {row.Event}")
+                result["Diagnosis"] = "No relevant finding"
+        results.append(result)
 
-    for index, row  in df_swing.iterrows():
+    for index, row in df_swing.iterrows():
+        result = {"Foot": row.Foot, "Event": row.Event, "Diagnosis": ""}
+        knee = row['LKnee'] if side == 'Left' else row['RKnee']
         if row.Event == 'Foot Strike':
-            knee = row['LKnee'] if side == 'Left' else row['RKnee']
             if knee == -1:
-                # Decreased knee flexion other foot
-                # TODO: Add the degree of flexion
-                print("Afgenomen knieflexie bij andere voet bij {row.Foot} {row.Event}")
+                result["Diagnosis"] = "Decreased knee flexion other foot"
             else:
-                print(f"Geen relevante bevindingen bij andere voet {row.Foot} {row.Event}")
+                result["Diagnosis"] = "No relevant finding"
+        results.append(result)
+    return results
 
 def diagnose_hip(data, side):
-    df_stance =  data[data['Foot'] == side]
+    df_stance = data[data['Foot'] == side]
     df_swing = data[data['Foot'] != side]
+    results = []
+
     # Diagnosis for the stance phase
     for index, row in df_stance.iterrows():
+        result = {"Foot": row.Foot, "Event": row.Event, "Diagnosis": ""}
+        hip = row['LHip'] if side == 'Left' else row['RHip']
         if row.Event == 'Foot Strike':
-            # Access the associated joint angle with the side
-            hip = row['LHip'] if side == 'Left' else row['RHip']
             if hip == 1:
-
-
-
-
+                result["Diagnosis"] = "Increased hip flexion"
+            else:
+                result["Diagnosis"] = "No relevant finding"
+        results.append(result)
+    return results
 
 def diagnose(data):
-    diagnose_ankle(data, 'Left')
-    diagnose_ankle(data, 'Right')
+    results = []
+    results.extend(diagnose_ankle(data, 'Left'))
+    results.extend(diagnose_ankle(data, 'Right'))
+    results.extend(diagnose_knee(data, 'Left'))
+    results.extend(diagnose_knee(data, 'Right'))
+    results.extend(diagnose_hip(data, 'Left'))
+    results.extend(diagnose_hip(data, 'Right'))
+    return results

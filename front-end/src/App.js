@@ -10,9 +10,9 @@ import ProtectedRoute from './ProtectedRoute';
 function Home() {
   const [c3dFiles, setC3dFiles] = useState([]);
   const [xlsxFiles, setXlsxFiles] = useState([]);
+  const [diagnosisResult, setDiagnosisResult] = useState(null); // State to store diagnosis result
   const { logout } = useAuth();
   const navigate = useNavigate();
-
 
   const handleC3dFileChange = (event) => {
     setC3dFiles(event.target.files);
@@ -48,6 +48,33 @@ function Home() {
       .then(data => {
         console.log("Files uploaded successfully:", data);
         alert("Files uploaded successfully!");
+
+        // Call the diagnosis endpoint if the files are XLSX
+        if (fileType === 'xlsx') {
+          const file = selectedFiles[0]; // Assuming only one XLSX file is uploaded for diagnosis
+          const diagnosisFormData = new FormData();
+          diagnosisFormData.append('file', file);
+
+          fetch('http://localhost:5000/diagnose', {
+            method: 'POST',
+            body: diagnosisFormData,
+            credentials: 'include'
+          })
+            .then(response => {
+              if (!response.ok) {
+                throw new Error('Network response was not ok');
+              }
+              return response.json();
+            })
+            .then(diagnosisData => {
+              console.log("Diagnosis result:", diagnosisData);
+              setDiagnosisResult(diagnosisData); // Set the diagnosis result
+            })
+            .catch(error => {
+              console.error("Error during diagnosis:", error);
+              alert("Error during diagnosis. Please try again.");
+            });
+        }
       })
       .catch(error => {
         console.error("Error uploading files:", error);
@@ -59,7 +86,6 @@ function Home() {
     logout();
     navigate('/auth');
   };
-  
 
   return (
     <div className="App">
@@ -79,6 +105,12 @@ function Home() {
           <button onClick={() => handleUpload('xlsx')}>Upload XLSX Files</button>
         </div>
       </div>
+      {diagnosisResult && (
+        <div className="diagnosis-result">
+          <h2>Diagnosis Result</h2>
+          <pre>{JSON.stringify(diagnosisResult, null, 2)}</pre>
+        </div>
+      )}
     </div>
   );
 }
@@ -87,7 +119,6 @@ function App() {
   return (
     <Routes>
       <Route path="/auth" element={<Auth />} />
-      {/* <Route path="/upload" element={<Home />} /> */}
       <Route path="/upload" element={<ProtectedRoute element={<Home />} />} />
       <Route path="" element={<Navigate to="/auth" />} />
     </Routes>
