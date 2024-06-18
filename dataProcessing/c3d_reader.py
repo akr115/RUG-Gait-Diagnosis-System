@@ -23,6 +23,7 @@ def readXLSX(file_path):
     # Create a DataFrame containing the variable names and values
     d = {'Variable': variable_names, 'Value': variable_values}
     df = pd.DataFrame(d)
+    df = df.replace(r'\s+', '', regex=True)
     return df
 
 # This function extracts the data from the c3d file and returns a DataFrame containing the events of the gait cycles.
