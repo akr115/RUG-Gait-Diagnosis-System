@@ -2,6 +2,7 @@ from c3d_reader import readC3D, trimGlobals, readXLSX
 from comparer import compareJointAngles
 from diagnoser import diagnose
 import pandas as pd
+import os
 
 def process():
     base_dir = os.path.dirname(os.path.abspath(__file__))
@@ -20,3 +21,4 @@ def process():
     variable_names = lo["Variable"].tolist()
     variable_values = lo["Value"].tolist()
     diagnosis = diagnose(joint_angles_differences, variable_names, variable_values)
+    return diagnosis

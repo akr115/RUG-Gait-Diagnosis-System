@@ -7,13 +7,11 @@ from werkzeug.utils import secure_filename
 from flask_cors import CORS
 import os
 import pandas as pd
-from dataProcessing.diagnoser import diagnose
-
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 # Now we can import diagnose from dataProcessing.diagnoser
-from dataProcessing.main import process
+from dataProcessing.process_starter import process
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Set a secret key for session management
