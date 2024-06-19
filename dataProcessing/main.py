@@ -17,8 +17,4 @@ if __name__ == "__main__":
                        first_frame_normal, last_frame_normal, first_frame, last_frame, frame_rate_normal, frame_rate)
     variable_names = lo["Variable"].tolist()
     variable_values = lo["Value"].tolist()
-    print(len(variable_names))
-    print(len(variable_values))
     diagnosis = diagnose(joint_angles_differences, variable_names, variable_values)
-    print(diagnosis)
-
