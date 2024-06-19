@@ -39,8 +39,10 @@ button {
   justify-content: center;
   border: solid black;
   border-radius: 0.5rem;
-  width: 20rem;
-  
+  width: fit-content;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1rem;
 }
 
 button:hover {
