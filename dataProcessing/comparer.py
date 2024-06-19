@@ -9,6 +9,7 @@ def calculateIndices(event, event_normal, frame_rate_normal, frame_rate, first_f
 def calculateDifferences(ankleAngles, kneeAngles, hipAngles , ankleAnglesNormal,  kneeAnglesNormal, hipAnglesNormal, frameNormal, frame):
     diff_array = []
     result = []
+    angles=[hipAngles[frame], kneeAngles[frame], ankleAngles[frame]]
     diff_array.append(hipAngles[frame] - hipAnglesNormal[frameNormal])
     diff_array.append(kneeAngles[frame] - kneeAnglesNormal[frameNormal])
     diff_array.append(ankleAngles[frame] - ankleAnglesNormal[frameNormal])
@@ -21,7 +22,7 @@ def calculateDifferences(ankleAngles, kneeAngles, hipAngles , ankleAnglesNormal,
         else:
             result.append(0)
 
-    return result
+    return result, angles
 
 def compareJointAngles(global_events, global_events_normal, LAngles, RAngles, LAnglesNormal, RAnglesNormal,
                        first_frame_normal, last_frame_normal, first_frame, last_frame, frame_rate_normal, frame_rate):
@@ -29,7 +30,8 @@ def compareJointAngles(global_events, global_events_normal, LAngles, RAngles, LA
     knee_index = 1
     ankle_index = 2
 
-    data_labels = ["LHip", "LKnee", "LAnkle", "RHip", "RKnee", "RAnkle", "Foot", "Event"]
+    data_labels = ["LHip","LHip Degrees", "LKnee", "LKnee Degrees" ,"LAnkle", "LAnkle Degrees" ,"RHip","RHip Degrees",
+                   "RKnee", "RKnee Degrees", "RAnkle", "RAnkle Degrees", "Foot", "Event"]
     data = []
 
     # Extract  joint angles for the left leg
@@ -58,12 +60,16 @@ def compareJointAngles(global_events, global_events_normal, LAngles, RAngles, LA
                                                            frame_rate, first_frame_normal, first_frame)
 
         #Call calculateDifferences for the left foot
-        result_l = calculateDifferences(LAnkleAngles, LKneeAngles, LHipAngles, LAnkleAnglesNormal, LKneeAnglesNormal, LHipAnglesNormal, index_frame_normal, index_frame)
+        result_l, angles_l = calculateDifferences(LAnkleAngles, LKneeAngles, LHipAngles, LAnkleAnglesNormal,
+                                                  LKneeAnglesNormal, LHipAnglesNormal, index_frame_normal, index_frame)
         #Call calculateDifferences for the right foot
-        result_r = calculateDifferences(RAnkleAngles, RKneeAngles, RHipAngles, RAnkleAnglesNormal, RKneeAnglesNormal, RHipAnglesNormal, index_frame_normal, index_frame)
+        result_r, angles_r = calculateDifferences(RAnkleAngles, RKneeAngles, RHipAngles, RAnkleAnglesNormal,
+                                                  RKneeAnglesNormal, RHipAnglesNormal, index_frame_normal, index_frame)
 
 
-        data.append([result_l[0], result_l[1], result_l[2], result_r[0], result_r[1], result_r[2], global_event['foot'], global_event['labels']])
+        data.append([result_l[0], angles_l[0], result_l[1], angles_l[1], result_l[2], angles_l[2],
+                     result_r[0], angles_r[0], result_r[1], angles_r[1], result_r[2], angles_r[2],
+                     global_event['foot'], global_event['labels']])
     df = pd.DataFrame(data, columns=data_labels)
     return df
 

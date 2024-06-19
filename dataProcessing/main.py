@@ -1,6 +1,7 @@
-from dataProcessing.c3d_reader import readC3D, trimGlobals, readXLSX
-from dataProcessing.comparer import compareJointAngles
-from dataProcessing.diagnoser import diagnose
+from c3d_reader import readC3D, trimGlobals, readXLSX
+from comparer import compareJointAngles
+from diagnoser import diagnose
+import pandas as pd
 
 if __name__ == "__main__":
     file_path_normal = '/Users/amoor/Downloads/Walk_100_03.c3d'
@@ -11,17 +12,9 @@ if __name__ == "__main__":
         readC3D(file_path_normal))
     global_events, LAngles, RAngles, first_frame, last_frame, frame_rate = readC3D(file_path)
     global_events = trimGlobals(global_events)
-
-
     global_events_normal=trimGlobals(global_events_normal)
     joint_angles_differences = compareJointAngles(global_events, global_events_normal, LAngles, RAngles, LAnglesNormal, RAnglesNormal,
                        first_frame_normal, last_frame_normal, first_frame, last_frame, frame_rate_normal, frame_rate)
-    print(joint_angles_differences)
-
-    diagnose(joint_angles_differences)
-
-
-
-    # print(global_events_normal)
-    # print("-----------------------------------")
-    # print(global_events)
+    variable_names = lo["Variable"].tolist()
+    variable_values = lo["Value"].tolist()
+    diagnosis = diagnose(joint_angles_differences, variable_names, variable_values)
