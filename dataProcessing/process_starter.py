@@ -1,6 +1,6 @@
-from c3d_reader import readC3D, trimGlobals, readXLSX
-from comparer import compareJointAngles
-from diagnoser import diagnose
+from .c3d_reader import readC3D, trimGlobals, readXLSX
+from .comparer import compareJointAngles
+from .diagnoser import diagnose
 import pandas as pd
 import os
 
