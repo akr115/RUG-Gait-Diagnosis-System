@@ -112,6 +112,7 @@ def diagnose_endpoint():
         filepath = os.path.join(UPLOAD_FOLDER_XLSX, filename)
         file.save(filepath)
         results = process()
+        print(results)
         results = results.to_json()
         return jsonify(results), 200
     else:
