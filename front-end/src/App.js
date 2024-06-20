@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { Route, Routes, Navigate, useNavigate } from 'react-router-dom';
+import { Routes, Route, useNavigate, Navigate } from 'react-router-dom';
 import { useAuth } from './AuthContext';
 import './App.css';
 import umcg_logo from './umcg-logo.png';
 import rug_logo from './rug-logo.png';
+import DiagnosisTable from './DiagnosisTable';
 import Auth from './Auth';
 import ProtectedRoute from './ProtectedRoute';
 
@@ -67,7 +68,7 @@ function Home() {
               return response.json();
             })
             .then(diagnosisData => {
-              console.log("Diagnosis result:", diagnosisData);
+              // console.log("Diagnosis result:", diagnosisData);
               setDiagnosisResult(diagnosisData); // Set the diagnosis result
             })
             .catch(error => {
@@ -108,7 +109,7 @@ function Home() {
       {diagnosisResult && (
         <div className="diagnosis-result">
           <h2>Diagnosis Result</h2>
-          <pre>{JSON.stringify(diagnosisResult, null, 2)}</pre>
+          <DiagnosisTable data={diagnosisResult} />
         </div>
       )}
     </div>

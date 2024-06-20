@@ -1,0 +1,21 @@
+.lo-cell {
+    max-width: 200px; /* Example maximum width for the LO cell */
+    max-height: 100px; /* Example maximum height for the LO cell */
+    overflow: auto; /* Enable scrolling if content exceeds dimensions */
+    padding: 8px; /* Padding for the cell */
+  }
+  
+  .lo-list {
+    list-style-type: none; /* Remove default list styling */
+    padding: 0;
+    margin: 0;
+  }
+  
+  .lo-list li {
+    margin-bottom: 8px; /* Space between each LO item */
+  }
+  
+  .empty-lo {
+    color: gray; /* Style for the "Empty" indicator */
+  }
+  
