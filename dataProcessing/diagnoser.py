@@ -10,7 +10,7 @@ def find_value_in_list(value, variable_names, variable_values):
         if variable_names[i] == value:
             return variable_values[i]
     return None
-#TODO: Add the LO values to the diagnosis
+#TODO: Seperate the LO and the diagnosis, ensure no duplicates
 def diagnose_ankle(data, lo_variable_names, lo_variable_values, side):
     df_stance =  data[data['Foot'] == side]
     df_swing = data[data['Foot'] != side]
