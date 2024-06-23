@@ -111,10 +111,10 @@ def diagnose_endpoint():
         filename = secure_filename(file.filename)
         filepath = os.path.join(UPLOAD_FOLDER_XLSX, filename)
         file.save(filepath)
-        results = process()
-        print(results)
+        results, lo = process()
         results = results.to_json()
-        return jsonify(results), 200
+        lo = lo.to_json()
+        return jsonify(results, lo), 200
     else:
         return jsonify({"error": "Invalid file type"}), 400
 
