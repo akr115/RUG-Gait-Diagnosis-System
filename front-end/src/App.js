@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Routes, Route, useNavigate, Navigate } from 'react-router-dom';
 import { useAuth } from './AuthContext';
 import './App.css';
@@ -14,6 +14,9 @@ function Home() {
   const [diagnosisResult, setDiagnosisResult] = useState(null); // State to store diagnosis result
   const { logout } = useAuth();
   const navigate = useNavigate();
+
+  const c3dInputRef = useRef(null);
+  const xlsxInputRef = useRef(null);
 
   const handleC3dFileChange = (event) => {
     setC3dFiles(event.target.files);
@@ -88,21 +91,36 @@ function Home() {
     navigate('/auth');
   };
 
+  const handleNewUpload = () => {
+    setC3dFiles([]);
+    setXlsxFiles([]);
+    setDiagnosisResult(null);
+    if (c3dInputRef.current) c3dInputRef.current.value = '';
+    if (xlsxInputRef.current) xlsxInputRef.current.value = '';
+  };
+
   return (
     <div className="App">
       <header className="App-header">
         <img src={umcg_logo} className='umcg-logo' alt="UMCG Logo" />
-        <h1>Gait Diagnosis System UMCG</h1>
+        <div className='header-button'>
+          <h1>Gait Diagnosis System UMCG</h1>
+          <div className="header-buttons">
+            <button onClick={handleLogout}>Logout</button>
+            <button onClick={handleNewUpload}>New Upload</button>
+          </div>
+        </div>
+
         <img src={rug_logo} className='umcg-logo' alt="RUG Logo" />
-        <button onClick={handleLogout}>Logout</button>
       </header>
+
       <div className="data-box">
         <div>
-          <input type="file" accept=".c3d" multiple onChange={handleC3dFileChange} />
+          <input type="file" accept=".c3d" multiple onChange={handleC3dFileChange} ref={c3dInputRef} />
           <button onClick={() => handleUpload('c3d')}>Upload C3D Files</button>
         </div>
         <div>
-          <input type="file" accept=".xlsx" multiple onChange={handleXlsxFileChange} />
+          <input type="file" accept=".xlsx" multiple onChange={handleXlsxFileChange} ref={xlsxInputRef} />
           <button onClick={() => handleUpload('xlsx')}>Upload XLSX Files</button>
         </div>
       </div>

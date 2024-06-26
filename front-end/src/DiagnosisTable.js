@@ -1,4 +1,5 @@
 import React from 'react';
+import './DiagnosisTable.css'; // Import the CSS file
 
 function DiagnosisTable({ data }) {
   // Ensure data is parsed from JSON if it's a string
@@ -17,58 +18,62 @@ function DiagnosisTable({ data }) {
 
   // Render the LO table
   const renderLOTable = () => (
-    <div className="lo-table">
+    <div className="table-container">
       <h2>LO Table</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Value</th>
-          </tr>
-        </thead>
-        <tbody>
-          {loNames.map((name, index) => (
-            <tr key={index}>
-              <td>{name}</td>
-              <td>{loValues[index]}</td>
+      <div className="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Value</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {loNames.map((name, index) => (
+              <tr key={index}>
+                <td>{name}</td>
+                <td>{loValues[index]}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 
   // Render the general diagnosis table
   const renderGeneralTable = () => (
-    <div className="general-table">
+    <div className="table-container">
       <h2>General Diagnosis Table</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Diagnosis</th>
-            <th>Joint Foot</th>
-            <th>Joint</th>
-            <th>Event Foot</th>
-            <th>Event</th>
-          </tr>
-        </thead>
-        <tbody>
-          {diagnoses.map((diag, index) => (
-            <tr key={index}>
-              <td>{diag}</td>
-              <td>{jointFoot[index]}</td>
-              <td>{joints[index]}</td>
-              <td>{eventFoots[index]}</td>
-              <td>{events[index]}</td>
+      <div className="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Diagnosis</th>
+              <th>Joint Foot</th>
+              <th>Joint</th>
+              <th>Event Foot</th>
+              <th>Event</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {diagnoses.map((diag, index) => (
+              <tr key={index}>
+                <td>{diag}</td>
+                <td>{jointFoot[index]}</td>
+                <td>{joints[index]}</td>
+                <td>{eventFoots[index]}</td>
+                <td>{events[index]}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 
   return (
-    <div className="App">
+    <div className="diagnosis-container">
       {renderLOTable()}
       {renderGeneralTable()}
     </div>
