@@ -2,34 +2,50 @@ import React from 'react';
 
 function DiagnosisTable({ data }) {
   // Ensure data is parsed from JSON if it's a string
-  const diagnosis = typeof data === 'string' ? JSON.parse(data) : data;
+  const [diagnosisJson, loJson] = data.map(item => JSON.parse(item));
 
-  // Extract necessary data
-  const diagnoses = Object.values(diagnosis.Diagnosis || {});
-  const loData = Object.values(diagnosis.LO || {});
-  const jointFoot = Object.values(diagnosis['Joint Foot'] || {});
-  const events = Object.values(diagnosis.Event || {});
-  const joints = Object.values(diagnosis.Joint || {});
-  const eventFoots = Object.values(diagnosis['Event Foot'] || {});
+  // Extract necessary data for the diagnosis table
+  const diagnoses = Object.values(diagnosisJson.Diagnosis || {});
+  const jointFoot = Object.values(diagnosisJson['Joint Foot'] || {});
+  const events = Object.values(diagnosisJson.Event || {});
+  const joints = Object.values(diagnosisJson.Joint || {});
+  const eventFoots = Object.values(diagnosisJson['Event Foot'] || {});
 
-  // Collect all unique headers from LO arrays across all diagnoses
-  let allHeaders = new Set();
-  loData.forEach((lo, index) => {
-    if (lo.length > 0) {
-      lo.forEach(item => allHeaders.add(item[0]));
-    }
-  });
-  allHeaders = Array.from(allHeaders); // Convert Set to Array
+  // Extract necessary data for the LO table
+  const loNames = Object.values(loJson.Name || {});
+  const loValues = Object.values(loJson.Value || {});
 
-  // Render the table
-  return (
-    <div className="App">
-      <h2>Diagnosis Table</h2>
+  // Render the LO table
+  const renderLOTable = () => (
+    <div className="lo-table">
+      <h2>LO Table</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          {loNames.map((name, index) => (
+            <tr key={index}>
+              <td>{name}</td>
+              <td>{loValues[index]}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+
+  // Render the general diagnosis table
+  const renderGeneralTable = () => (
+    <div className="general-table">
+      <h2>General Diagnosis Table</h2>
       <table>
         <thead>
           <tr>
             <th>Diagnosis</th>
-            <th>LO</th>
             <th>Joint Foot</th>
             <th>Joint</th>
             <th>Event Foot</th>
@@ -40,19 +56,6 @@ function DiagnosisTable({ data }) {
           {diagnoses.map((diag, index) => (
             <tr key={index}>
               <td>{diag}</td>
-              <td className="lo-cell">
-                {loData[index]?.length > 0 ? (
-                  <ul className="lo-list">
-                    {loData[index].map((item, idx) => (
-                      <li key={idx}>
-                        <strong>{item[0]}:</strong> {item[1]}
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <span className="empty-lo">Empty</span>
-                )}
-              </td>
               <td>{jointFoot[index]}</td>
               <td>{joints[index]}</td>
               <td>{eventFoots[index]}</td>
@@ -61,6 +64,13 @@ function DiagnosisTable({ data }) {
           ))}
         </tbody>
       </table>
+    </div>
+  );
+
+  return (
+    <div className="App">
+      {renderLOTable()}
+      {renderGeneralTable()}
     </div>
   );
 }

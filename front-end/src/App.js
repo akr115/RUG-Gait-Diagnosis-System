@@ -68,7 +68,7 @@ function Home() {
               return response.json();
             })
             .then(diagnosisData => {
-              // console.log("Diagnosis result:", diagnosisData);
+              console.log("Diagnosis result:", diagnosisData);
               setDiagnosisResult(diagnosisData); // Set the diagnosis result
             })
             .catch(error => {
