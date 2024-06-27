@@ -7,19 +7,21 @@ from .phase_extractor import findMidStance, findTerminalStance, findLoadingRespo
 def readXLSX(file_path):
     xls = pd.ExcelFile(file_path)
     df = pd.read_excel(xls, sheet_name='Blad1', header=None)
-
+    steps = 3
     # Initialize lists for variable names and values
     variable_names = []
     variable_values = []
 
+
     # Iterate through the entire column in steps of 3
-    for i in range(0, len(df) - 2, 3):
-        if pd.notna(df.iloc[i + 1, 0]):  # Check if the name cell is not empty
-            name = df.iloc[i + 1, 0]
-            value = df.iloc[i + 2, 0]
+    for i in range(0, len(df) - (steps - 1), steps):
+        variable_index = i + 1
+        value_index = i + 2
+        if pd.notna(df.iloc[variable_index, 0]):  # Check if the name cell is not empty
+            name = df.iloc[variable_index, 0]
+            value = df.iloc[value_index, 0]
             variable_names.append(name)
             variable_values.append(value)
-
     # Create a DataFrame containing the variable names and values
     d = {'Variable': variable_names, 'Value': variable_values}
     df = pd.DataFrame(d)
@@ -41,14 +43,14 @@ def readC3D(file_path):
     contexts_frames = c3d_file['parameters']['EVENT']['TIMES']['value'][1, :]
     frameRate = c3d_file['header']['points']['frame_rate']
     firstFrame = c3d_file['header']['points']['first_frame']
-    lastFrame = c3d_file['header']['analogs']['last_frame']
-
+    dimension =  3
     for i in range(0, numberOfIndicators):
         for j in range(0, numberOfFramesPerIndicator):
             data[labels[i]][j] = []
-            for k in range(0, 3):
+            for k in range(0, dimension):
                 data[labels[i]][j].append(label_values[k][i][j])
     df = pd.DataFrame(data)
+    # Extract the joint angles for the left and right leg
     LKneeAngle = df['LKneeAngles']
     LKneeAngle = np.array([list(LKneeAngle[elem]) for elem in LKneeAngle.keys()])
     RKneeAngle = df['RKneeAngles']
@@ -63,6 +65,7 @@ def readC3D(file_path):
     RAnkleAngle = np.array([list(RAnkleAngle[elem]) for elem in RAnkleAngle.keys()])
     LAngles = [LHipAngle, LKneeAngle, LAnkleAngle]
     RAngles = [RHipAngle, RKneeAngle, RAnkleAngle]
+    # Create a DataFrame containing the global events
     d = {'foot': contexts, 'labels': contexts_labels, 'times': contexts_frames}
     globalEvents = pd.DataFrame(d).sort_values('times').reset_index(drop=True)
     # Extract the midstance, terminal stance and loading response
@@ -91,8 +94,8 @@ def readC3D(file_path):
     globalEvents = pd.concat([globalEvents, terminalStance], ignore_index=True)
     globalEvents = pd.concat([globalEvents, loadingResponse], ignore_index=True)
     globalEvents = globalEvents.sort_values('times').reset_index(drop=True)
-
-    return globalEvents, LAngles, RAngles, firstFrame, lastFrame, frameRate
+    # Return the global events, the joint angles, the first and last frame and the frame rate
+    return globalEvents, LAngles, RAngles, firstFrame, frameRate
 
 # This function trims the global events DataFrame to only contain the events that are necessary for the analysis.
 # We select the first 2 gait cycles, one for each leg, and we only keep the events that are necessary for the analysis.

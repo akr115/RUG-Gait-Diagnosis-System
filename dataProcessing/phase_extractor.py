@@ -67,6 +67,7 @@ def findTerminalStance(Fs_MarkerPositions, times, contexts, events):
     evnt_footstrike_left = []
     evnt_terminalStance_right = []
     evnt_terminalStance_left = []
+    frame_estimation = 10
 
     # Find all the frames where the foot off event occurs
     for i in range(0, len(events)):
@@ -78,9 +79,9 @@ def findTerminalStance(Fs_MarkerPositions, times, contexts, events):
     # Find the frames where the terminal stance event occurs
     # We estimate it by 10 frames before the opposite leg has 'Foot Strike'
     for i in range(0, len(evnt_footstrike_right)):
-        evnt_terminalStance_left.append(evnt_footstrike_right[i] - 10 / Fs_MarkerPositions)
+        evnt_terminalStance_left.append(evnt_footstrike_right[i] - frame_estimation / Fs_MarkerPositions)
     for i in range(0, len(evnt_footstrike_left)):
-        evnt_terminalStance_right.append(evnt_footstrike_left[i] - 10 / Fs_MarkerPositions)
+        evnt_terminalStance_right.append(evnt_footstrike_left[i] - frame_estimation / Fs_MarkerPositions)
 
     return evnt_terminalStance_right, evnt_terminalStance_left
 
@@ -91,6 +92,7 @@ def findLoadingResponse(Fs_MarkerPositions, times, contexts, events):
     evnt_footoff_left = []
     evnt_loading_resp_right = []
     evnt_loading_resp_left = []
+    frame_estimation = 10
 
     # Find all the frames where the foot off event occurs
     for i in range(0, len(events)):
@@ -102,8 +104,8 @@ def findLoadingResponse(Fs_MarkerPositions, times, contexts, events):
     # Find the frames where the terminal stance event occurs
     # We estimate it by 10 frames before the opposite leg has 'Foot Off'
     for i in range(0, len(evnt_footoff_right)):
-        evnt_loading_resp_right.append(evnt_footoff_left[i] - 10 / Fs_MarkerPositions)
+        evnt_loading_resp_right.append(evnt_footoff_left[i] - frame_estimation / Fs_MarkerPositions)
     for i in range(0, len(evnt_footoff_left)):
-        evnt_loading_resp_left.append(evnt_footoff_right[i] - 10 / Fs_MarkerPositions)
+        evnt_loading_resp_left.append(evnt_footoff_right[i] - frame_estimation / Fs_MarkerPositions)
 
     return evnt_loading_resp_right, evnt_loading_resp_left

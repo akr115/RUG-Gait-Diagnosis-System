@@ -1,16 +1,9 @@
 import sys
 from flask import Flask, jsonify, render_template, redirect, url_for, flash, session, request
-
-from forms import LoginForm
-from flask_wtf.csrf import CSRFProtect
 from werkzeug.utils import secure_filename
 from flask_cors import CORS
 import os
-import pandas as pd
-
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-
-# Now we can import diagnose from dataProcessing.diagnoser
 from dataProcessing.process_starter import process
 
 app = Flask(__name__)
@@ -20,6 +13,8 @@ cors = CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
 
 UPLOAD_FOLDER_C3D = 'uploads/c3d'
 UPLOAD_FOLDER_XLSX = 'uploads/xlsx'
+FILENAME_C3D = 'Walk.c3d'
+FILENAME_XLSX = 'LO.xlsx'
 if not os.path.exists(UPLOAD_FOLDER_C3D):
     os.makedirs(UPLOAD_FOLDER_C3D)
 if not os.path.exists(UPLOAD_FOLDER_XLSX):
@@ -69,7 +64,7 @@ def upload_c3d_files():
         filenames = []
         for file in files:
             if file and file.filename.endswith('.c3d'):
-                filename = secure_filename(file.filename)
+                filename = secure_filename(FILENAME_C3D)
                 file.save(os.path.join(UPLOAD_FOLDER_C3D, filename))
                 filenames.append(filename)
         return jsonify({"message": "C3D files uploaded successfully!", "filenames": filenames}), 200
@@ -89,7 +84,7 @@ def upload_xlsx_files():
         filenames = []
         for file in files:
             if file and file.filename.endswith('.xlsx'):
-                filename = secure_filename(file.filename)
+                filename = secure_filename(FILENAME_XLSX)
                 file.save(os.path.join(UPLOAD_FOLDER_XLSX, filename))
                 filenames.append(filename)
         return jsonify({"message": "XLSX files uploaded successfully!", "filenames": filenames}), 200
@@ -111,7 +106,16 @@ def diagnose_endpoint():
         filename = secure_filename(file.filename)
         filepath = os.path.join(UPLOAD_FOLDER_XLSX, filename)
         file.save(filepath)
-        results, lo = process()
+        # Extract numeric value from request
+        file_c3d = os.path.join(os.path.dirname(__file__), UPLOAD_FOLDER_C3D, FILENAME_C3D)
+        file_xlsx = os.path.join(os.path.dirname(__file__), UPLOAD_FOLDER_XLSX, FILENAME_XLSX)
+
+        numeric_value = 8
+        # numeric_value = request.form.get('numeric_value', type=float)
+        # if numeric_value is None:
+        #     return jsonify({"error": "No numeric value provided"}), 400
+
+        results, lo = process(numeric_value, file_c3d, file_xlsx)
         results = results.to_json()
         lo = lo.to_json()
         return jsonify(results, lo), 200
