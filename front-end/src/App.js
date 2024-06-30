@@ -4,8 +4,8 @@ import { useAuth } from './AuthContext';
 import './App.css';
 import umcg_logo from './umcg-logo.png';
 import rug_logo from './rug-logo.png';
-import DiagnosisTable from './DiagnosisTable';
-import Auth from './Auth';
+import DiagnosisTable from './components/diagnosis-table/DiagnosisTable';
+import Auth from './pages/authentication/Auth';
 import ProtectedRoute from './ProtectedRoute';
 
 function Home() {
@@ -27,16 +27,20 @@ function Home() {
   };
 
   const handleUpload = (fileType) => {
+    //checks if the file type is c3d for upload
     const selectedFiles = fileType === 'c3d' ? c3dFiles : xlsxFiles;
     if (selectedFiles.length === 0) {
       alert("Please select files first!");
       return;
     }
+
+    //allows multiple file upload
     const formData = new FormData();
     for (let i = 0; i < selectedFiles.length; i++) {
       formData.append("files", selectedFiles[i]);
     }
 
+    //calls upon upload c3d file upload if its a c3d file otherwise calls upon xlsx file
     const endpoint = fileType === 'c3d' ? "/upload/c3d" : "/upload/xlsx";
     fetch(`http://127.0.0.1:5000${endpoint}`, {
       method: "POST",
@@ -91,6 +95,7 @@ function Home() {
     navigate('/auth');
   };
 
+  //allows user to upload new files and clears all inputs and arrays
   const handleNewUpload = () => {
     setC3dFiles([]);
     setXlsxFiles([]);
@@ -127,6 +132,7 @@ function Home() {
       {diagnosisResult && (
         <div className="diagnosis-result">
           <h2>Diagnosis Result</h2>
+          {/* Calls upon DiagnosisTable component to dynamically render a table based off Diagnosis Result (JSON object) */}
           <DiagnosisTable data={diagnosisResult} />
         </div>
       )}
