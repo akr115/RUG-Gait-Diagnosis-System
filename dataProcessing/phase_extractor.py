@@ -103,9 +103,9 @@ def findLoadingResponse(Fs_MarkerPositions, times, contexts, events):
 
     # Find the frames where the terminal stance event occurs
     # We estimate it by 10 frames before the opposite leg has 'Foot Off'
-    for i in range(0, len(evnt_footoff_right)):
-        evnt_loading_resp_right.append(evnt_footoff_left[i] - frame_estimation / Fs_MarkerPositions)
     for i in range(0, len(evnt_footoff_left)):
+        evnt_loading_resp_right.append(evnt_footoff_left[i] - frame_estimation / Fs_MarkerPositions)
+    for i in range(0, len(evnt_footoff_right)):
         evnt_loading_resp_left.append(evnt_footoff_right[i] - frame_estimation / Fs_MarkerPositions)
 
     return evnt_loading_resp_right, evnt_loading_resp_left
