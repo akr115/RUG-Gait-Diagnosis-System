@@ -24,11 +24,13 @@ function Auth() {
 
   return (
     <div className="Auth">
-      <div className="header">
-        <img src={umcg_logo} alt="UMCG Logo" className="logo-left" />
-        <h1>Gait Diagnosis System</h1>
-        <img src={rug_logo} alt="University of Groningen Logo" className="logo-right" />
-      </div>
+       <header className="header">
+        <img src={umcg_logo} className='umcg-logo' alt="UMCG Logo" />
+        <div className='header-button'>
+          <h1>Gait Diagnosis System UMCG</h1>
+        </div>
+        <img src={rug_logo} className='umcg-logo' alt="RUG Logo" />
+      </header>
       <div className="form-box">
         <form className="auth-box" onSubmit={handleLogin}>
           <div className="input">

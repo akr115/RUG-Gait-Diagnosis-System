@@ -131,7 +131,6 @@ function Home() {
       </div>
       {diagnosisResult && (
         <div className="diagnosis-result">
-          <h2>Diagnosis Result</h2>
           {/* Calls upon DiagnosisTable component to dynamically render a table based off Diagnosis Result (JSON object) */}
           <DiagnosisTable data={diagnosisResult} />
         </div>

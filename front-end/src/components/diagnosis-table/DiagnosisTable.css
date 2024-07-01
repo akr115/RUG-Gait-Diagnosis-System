@@ -17,16 +17,22 @@
   max-height: 40vh; /* Adjust as needed */
   overflow-y: auto;
   max-width: 40vw;
+  border: solid 2px black;
+  border-radius: 0.25rem;
+  padding: 0.5rem;
+  background-color: aliceblue;
 }
 
 table {
   width: 100%;
-  border-collapse: collapse;
+  border: 4px black;
   margin: 10px 0;
+  border-radius: 0.5rem;
+
 }
 
 th, td {
-  border: 1px solid #ddd;
+  border: 2px solid #ddd;
   padding: 8px;
   text-align: left;
 }

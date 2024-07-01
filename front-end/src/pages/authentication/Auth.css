@@ -17,14 +17,18 @@ html, body {
 }
 
 .header {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 1rem;
-    padding: 1rem;
-    margin-bottom: 2rem;
-    background-color: aliceblue;
+    width: 100%;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  color: red;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  background-color: lightblue;
+  margin-bottom: 2rem;
 }
+
 
 .header h1 {
     font-family: sans-serif;
@@ -32,21 +36,13 @@ html, body {
     font-weight: 900;
 }
 
-.logo-left {
-    height: 5rem;
-    width: 10rem;
-    border-right: solid 4px black;
-    padding-right: 1rem;
-}
-
-.logo-right {
-    height: 5rem;
-    width: 10rem;
-    border-left: solid 4px black;
-    padding-left: 1rem;
-
-}
-
+.umcg-logo {
+    width: 150px;
+    height: auto;
+    margin-left: 1rem;
+    margin-right: 1rem;
+  }
+  
 .form-box {
     display: flex;
     flex-direction: column;
@@ -95,7 +91,7 @@ button {
     background-color: blue;
     border: none;
     font-weight: 900;
-    border: black;
+    border: solid 2px black;
     border-style: solid;
     border-width: 3px;
 

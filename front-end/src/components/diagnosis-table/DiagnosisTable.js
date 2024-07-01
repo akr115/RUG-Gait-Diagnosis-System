@@ -44,7 +44,7 @@ function DiagnosisTable({ data }) {
   // Render the general diagnosis table
   const renderGeneralTable = () => (
     <div className="table-container">
-      <h2>General Diagnosis Table</h2>
+      <h2>Diagnosis Table</h2>
       <div className="table-wrapper">
         <table>
           <thead>

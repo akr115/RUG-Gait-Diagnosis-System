@@ -10,12 +10,12 @@
   width: 100%;
   padding-top: 1rem;
   padding-bottom: 1rem;
-  color: red;
+  color: blue;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  background-color: lightgoldenrodyellow;
+  background-color: lightblue;
 
   .header-button{
     display: flex;
@@ -42,6 +42,7 @@
 .header-buttons button {
   padding: 10px 15px;
   cursor: pointer;
+  border: solid 2px black;
 }
 
 .data-box {
@@ -51,7 +52,7 @@
   padding: 1rem;
   align-items: center;
   justify-content: center;
-  border: solid black;
+  border: solid 3px black;
   border-radius: 0.5rem;
   width: fit-content;
   flex-direction: column;
@@ -59,10 +60,10 @@
 }
 
 button:hover {
-  background-color: lightgreen;
+  background-color: lightblue;
   color: white;
 }
 
 button:active {
-  background-color: darkgreen;
+  background-color: darkblue;
 }
