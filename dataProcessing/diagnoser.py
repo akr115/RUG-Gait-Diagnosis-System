@@ -338,8 +338,8 @@ def diagnose(data, variable_names, variable_values):
 
     # Concatenate the results for the left and right leg
     result = pd.concat([left_side, right_side], ignore_index=True)
-    # Sort the results by the phases of the gait cycle
-    columns_sort = ['Event Foot']
+    # # Sort the results by the phases of the gait cycle
+    columns_sort = ['Event', 'Event Foot']
     result = result.sort_values(columns_sort).reset_index(drop=True)
 
     # Remove duplicates from the list of relevant variables and
