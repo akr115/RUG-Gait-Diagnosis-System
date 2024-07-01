@@ -89,7 +89,6 @@ def upload_xlsx_files():
                 filenames.append(filename)
         return jsonify({"message": "XLSX files uploaded successfully!", "filenames": filenames}), 200
     except Exception as e:
-        print("yo")
         return jsonify({"error": str(e)}), 500
 
     

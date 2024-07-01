@@ -1,32 +1,48 @@
 .diagnosis-container {
+  margin-top: 2rem;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  gap: 1rem;
+  gap: 2rem;
   padding: 20px;
   max-height: 50vh;
 }
 
 .table-container {
-  margin: 10px;
   display: flex;
   flex-direction: column;
+  border: solid 2px black;
+  border-top-left-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
+
+  h2 {
+    border-bottom: solid 2px black;
+    padding-bottom: 1rem;
+    margin: 0;
+    padding-top: 1rem;
+    background-color: lightblue;
+    border-top-left-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
+  }
 }
 
 .table-wrapper {
   max-height: 40vh; /* Adjust as needed */
   overflow-y: auto;
   max-width: 40vw;
+  background-color: aliceblue;
 }
 
 table {
   width: 100%;
-  border-collapse: collapse;
-  margin: 10px 0;
+  border: 4px black;
+  border-top-left-radius: 0.5rem;
+  border-top-right-radius: 0.5rem;
+  padding: 0.5rem;
 }
 
 th, td {
-  border: 1px solid #ddd;
+  border: 2px solid #ddd;
   padding: 8px;
   text-align: left;
 }
