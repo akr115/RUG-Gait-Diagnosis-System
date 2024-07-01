@@ -109,12 +109,7 @@ def diagnose_endpoint():
         # Extract numeric value from request
         file_c3d = os.path.join(os.path.dirname(__file__), UPLOAD_FOLDER_C3D, FILENAME_C3D)
         file_xlsx = os.path.join(os.path.dirname(__file__), UPLOAD_FOLDER_XLSX, FILENAME_XLSX)
-
         numeric_value = 8
-        # numeric_value = request.form.get('numeric_value', type=float)
-        # if numeric_value is None:
-        #     return jsonify({"error": "No numeric value provided"}), 400
-
         results, lo = process(numeric_value, file_c3d, file_xlsx)
         results = results.to_json()
         lo = lo.to_json()
