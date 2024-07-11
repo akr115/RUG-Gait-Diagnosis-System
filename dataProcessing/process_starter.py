@@ -8,9 +8,11 @@ def process(threshold, directory_c3d, directory_xlsx):
     file_path_normal = './Walk_100_03.c3d'
     # Read the xlsx file
     lo = readXLSX(directory_xlsx)
+    print("Trying to read the global events of the normal gait")
     # Read the c3d file of normal gait
     global_events_normal, LAnglesNormal, RAnglesNormal, first_frame_normal, frame_rate_normal = (
         readC3D(os.path.join(base_dir, file_path_normal)))
+    print("Trying to read the global events of the patient")
     # Read the c3d file of the patient
     global_events, LAngles, RAngles, first_frame, frame_rate = readC3D(directory_c3d)
     # Trim the global events for both gaits
