@@ -1,14 +1,55 @@
 name: package-mac
 run-name: mac packaging
+
 on: [push]
+
 jobs:
-  pyinstaller-build:
-    runs-on: [windows-latest, macos-latest]
+  pyinstaller-build-windows:
+    runs-on: windows-latest
+
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyinstaller
+
       - name: Create Executable
         uses: sayyid5416/pyinstaller@v1
         with:
           python_ver: '3.11'
           spec: 'src/build.spec'
           upload_exe_with_name: 'My executable'
-          options: --onefile, --name "My App", --windowed, 
+          options: --onefile --name "My App" --windowed
+
+  pyinstaller-build-macos:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyinstaller
+
+      - name: Create Executable
+        uses: sayyid5416/pyinstaller@v1
+        with:
+          python_ver: '3.11'
+          spec: 'src/build.spec'
+          upload_exe_with_name: 'My executable'
+          options: --onefile --name "My App" --windowed
