@@ -25,7 +25,7 @@ jobs:
         uses: sayyid5416/pyinstaller@v1
         with:
           python_ver: '3.11'
-          spec: 'src/build.spec'
+          spec: 'my_flask_app.spec'
           upload_exe_with_name: 'My executable'
           options: --onefile --name "My App" --windowed
 
@@ -50,6 +50,6 @@ jobs:
         uses: sayyid5416/pyinstaller@v1
         with:
           python_ver: '3.11'
-          spec: 'src/build.spec'
+          spec: 'my_flask_app.spec'
           upload_exe_with_name: 'My executable'
           options: --onefile --name "My App" --windowed
