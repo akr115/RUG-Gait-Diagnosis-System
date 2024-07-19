@@ -49,7 +49,7 @@ def diagnose_ankle(data, side):
                 results.append(["Geen relevante bevindingen", side, joint, row.Foot, row.Event])
                 plantar_flag = 1
         elif row.Event == 'Loading Response':
-            if plantar_flag == 1 and ankle == 0:
+            if plantar_flag == 1 and ankle == -1:
                 # No/decreased plantarflexion
                 results.append([f"Geen/afgenomen plantairflexiebeweging", side, joint, row.Foot, row.Event])
             else:
@@ -167,7 +167,7 @@ def diagnose_knee(data, side):
                 # Increased knee flexion
                 results.append([f"Toegenomen knieflexie ({str(np.round(knee_degrees))} graden) tijdens",  side,
                                joint, row.Foot, row.Event])
-            elif knee == 1:
+            elif knee == -1:
                 if knee_degrees >= 0:
                     # TODO: Knee Moment Saggital
                     # Decreased knee flexion
