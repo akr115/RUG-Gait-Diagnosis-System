@@ -130,6 +130,8 @@ def diagnose_endpoint():
         results, lo = process(numeric_value, file_c3d, file_xlsx)
         results = results.to_json()
         lo = lo.to_json()
+        print("Results:", results, flush=True)
+        print("LO:", lo)
         return jsonify(results, lo), 200
     else:
         return jsonify({"error": "Invalid file type"}), 400

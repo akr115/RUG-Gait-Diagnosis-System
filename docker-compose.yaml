@@ -2,7 +2,7 @@ name: gait-analyzer
 services:
   frontend:
     build:
-      context: ./front-end
+      context: ./frontend
       dockerfile: Dockerfile
     ports:
       - "3000:3000"
@@ -10,6 +10,9 @@ services:
       - gait-network
     env_file:
       - .env
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
 
   backend:
     build:
