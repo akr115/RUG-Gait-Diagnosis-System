@@ -1,0 +1,12 @@
+name: flask-env
+channels:
+  - defaults
+  - conda-forge
+dependencies:
+  - python=3.10
+  - flask
+  - ezc3d
+  - openpyxl
+  - pip
+  - flask_cors
+  - pandas

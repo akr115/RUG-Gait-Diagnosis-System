@@ -1,0 +1,34 @@
+name: gait-analyzer
+services:
+  frontend:
+    build:
+      context: ./front-end
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    networks:
+      - gait-network
+    env_file:
+      - .env
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+    environment:
+      FLASK_ENV: development
+      FLASK_APP: app.py
+    networks:
+      - gait-network
+
+networks:
+    gait-network:
+      driver: bridge
+
+
+
+

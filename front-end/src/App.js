@@ -42,7 +42,7 @@ function Home() {
 
     //calls upon upload c3d file upload if its a c3d file otherwise calls upon xlsx file
     const endpoint = fileType === 'c3d' ? "/upload/c3d" : "/upload/xlsx";
-    fetch(`http://127.0.0.1:5000${endpoint}`, {
+    fetch(`http://127.0.0.1:8000${endpoint}`, {
       method: "POST",
       body: formData,
       credentials: 'include'
@@ -63,7 +63,7 @@ function Home() {
           const diagnosisFormData = new FormData();
           diagnosisFormData.append('file', file);
 
-          fetch('http://127.0.0.1:5000/diagnose', {
+          fetch('http://127.0.0.1:8000/diagnose', {
             method: 'POST',
             body: diagnosisFormData,
             credentials: 'include'

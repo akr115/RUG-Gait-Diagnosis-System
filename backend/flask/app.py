@@ -11,8 +11,8 @@ app.secret_key = 'your_secret_key'  # Set a secret key for session management
 
 cors = CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
 
-UPLOAD_FOLDER_C3D = 'uploads/c3d'
-UPLOAD_FOLDER_XLSX = 'uploads/xlsx'
+UPLOAD_FOLDER_C3D = 'flask/uploads/c3d'
+UPLOAD_FOLDER_XLSX = 'flask/uploads/xlsx'
 FILENAME_C3D = 'Walk.c3d'
 FILENAME_XLSX = 'LO.xlsx'
 
@@ -135,4 +135,4 @@ def diagnose_endpoint():
         return jsonify({"error": "Invalid file type"}), 400
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=8000, debug=True)
