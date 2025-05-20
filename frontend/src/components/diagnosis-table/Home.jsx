@@ -1,19 +1,10 @@
-import React, { useState, useRef } from 'react';
-import { Routes, Route, useNavigate, Navigate } from 'react-router-dom';
-import { useAuth } from './AuthContext';
-import './App.css';
-import umcg_logo from './umcg-logo.png';
-import rug_logo from './rug-logo.png';
-import DiagnosisTable from './components/diagnosis-table/DiagnosisTable';
-import Auth from './pages/authentication/Auth';
-import ProtectedRoute from './ProtectedRoute';
+import { useState, useRef } from 'react';
+import DiagnosisTable from './DiagnosisTable';
 
-function Home() {
+export default function Home() {
   const [c3dFiles, setC3dFiles] = useState([]);
   const [xlsxFiles, setXlsxFiles] = useState([]);
-  const [diagnosisResult, setDiagnosisResult] = useState(null); // State to store diagnosis result
-  const { logout } = useAuth();
-  const navigate = useNavigate();
+  const [diagnosisResult, setDiagnosisResult] = useState(null);
 
   const c3dInputRef = useRef(null);
   const xlsxInputRef = useRef(null);
@@ -27,7 +18,6 @@ function Home() {
   };
 
   const handleUpload = (fileType) => {
-    //checks if the file type is c3d for upload
     const selectedFiles = fileType === 'c3d' ? c3dFiles : xlsxFiles;
     if (selectedFiles.length === 0) {
       alert("Please select files first!");
@@ -57,9 +47,8 @@ function Home() {
         console.log("Files uploaded successfully:", data);
         alert("Files uploaded successfully!");
 
-        // Call the diagnosis endpoint if the files are XLSX
         if (fileType === 'xlsx') {
-          const file = selectedFiles[0]; // Assuming only one XLSX file is uploaded for diagnosis
+          const file = selectedFiles[0];
           const diagnosisFormData = new FormData();
           diagnosisFormData.append('file', file);
 
@@ -90,10 +79,6 @@ function Home() {
       });
   };
 
-  const handleLogout = () => {
-    logout();
-    navigate('/auth');
-  };
 
   //allows user to upload new files and clears all inputs and arrays
   const handleNewUpload = () => {
@@ -107,16 +92,15 @@ function Home() {
   return (
     <div className="App">
       <header className="App-header">
-        <img src={umcg_logo} className='umcg-logo' alt="UMCG Logo" />
+        <img src='/umcg-logo.png' className='umcg-logo' alt="UMCG Logo" />
         <div className='header-button'>
           <h1>Gait Diagnosis System UMCG</h1>
           <div className="header-buttons">
-            <button onClick={handleLogout}>Logout</button>
             <button onClick={handleNewUpload}>New Upload</button>
           </div>
         </div>
 
-        <img src={rug_logo} className='umcg-logo' alt="RUG Logo" />
+        <img src='/rug-logo.png' className='umcg-logo' alt="RUG Logo" />
       </header>
 
       <div className="data-box">
@@ -131,22 +115,9 @@ function Home() {
       </div>
       {diagnosisResult && (
         <div className="diagnosis-result">
-          {/* Calls upon DiagnosisTable component to dynamically render a table based off Diagnosis Result (JSON object) */}
           <DiagnosisTable data={diagnosisResult} />
         </div>
       )}
     </div>
   );
 }
-
-function App() {
-  return (
-    <Routes>
-      <Route path="/auth" element={<Auth />} />
-      <Route path="/upload" element={<ProtectedRoute element={<Home />} />} />
-      <Route path="" element={<Navigate to="/auth" />} />
-    </Routes>
-  );
-}
-
-export default App;

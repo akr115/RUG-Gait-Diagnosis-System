@@ -1,7 +1,7 @@
 import React from 'react';
 import './DiagnosisTable.css'; // Import the CSS file
 
-function DiagnosisTable({ data }) {
+export default function DiagnosisTable({ data }) {
   // Ensure data is parsed from JSON if it's a string
   const [diagnosisJson, loJson] = data.map(item => JSON.parse(item));
 
@@ -74,10 +74,55 @@ function DiagnosisTable({ data }) {
 
   return (
     <div className="diagnosis-container">
-      {renderLOTable()}
-      {renderGeneralTable()}
+      {/* {renderLOTable()} */}
+      {/* {renderGeneralTable()} */}
+      <div className="table-container">
+      <h2>Left</h2>
+      <div className="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Diagnosis</th>
+              <th>Joint</th>
+              <th>Event Foot</th>
+              <th>Relevant LO</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Plantairflexie (-9.0 graden)</td>
+              <td>Ankle</td>
+              <td>Left Foot Strike</td>
+              <td>HeupextensieMRCLinks 4.0<br/>Toegenomen knieflexie 17.9</td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+      </div>
+      <div className="table-container">
+      <h2>Right</h2>
+      <div className="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Diagnosis</th>
+              <th>Joint</th>
+              <th>Event Foot</th>
+              <th>Relevant LO</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Plantairflexie (-9.0 graden)</td>
+              <td>Ankle</td>
+              <td>Left Foot Strike</td>
+              <td>HeupextensieMRCLinks 4.0<br/>Toegenomen knieflexie 17.9</td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+      </div>
     </div>
   );
 }
-
-export default DiagnosisTable;
+//200g faina
